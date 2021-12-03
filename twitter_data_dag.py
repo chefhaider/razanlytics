@@ -66,7 +66,7 @@ WORKFLOW_START_DATE = datetime.combine(
    datetime.today() - timedelta(1),
    datetime.min.time()) # yesterday
 
-WORKFLOW_SCHEDULE_INTERVAL = '*/10 * * * *'
+WORKFLOW_SCHEDULE_INTERVAL = '30 8 * * *'
 
 WORKFLOW_DEFAULT_ARGS = {
  'start_date': WORKFLOW_START_DATE,
