@@ -3,7 +3,8 @@ from airflow.operators.python import PythonOperator, BranchPythonOperator
 from airflow.operators.bash import BashOperator
 from datetime import datetime,timedelta
 
-import boto3 
+import tweepy
+import boto3
 import pandas as pd
 
 AWSAccessKeyId='AKIAWVZUC74SU2HOSPEF'
@@ -23,27 +24,30 @@ s3 = boto3.resource(
 
 
 def twitter_data_collection():
-    
+
     global s3
-    
+
     baerer_token = "AAAAAAAAAAAAAAAAAAAAAL9eVAEAAAAAlzrtLYD30GeMrnrPOwseqkG22kw%3DnYVHvJSEJa6evdQyYI3pKj4RHSLTFNpNYErv1wYDaouNnn3xk0"
 
     api_key = "SmcmmHAkjutFFPftMckmPWWuH"
     api_secret = "i0ciB7f2egCQlPmKn08K7NZMWNAknhuBe74wzPuWcuOCZ13iXc"
     access_token = "1452266272511647751-KPXZJxXgpBUm4FguKaSvfG2vgr18Za"
     access_token_secret = "ew7N8JNa16xhwUhHBQmRcGSHB3KNYg783fL2yc1QfJXyc"
-    
+
     # Creating the authentication object
     auth = tweepy.OAuthHandler(api_key, api_secret)
     # Setting your access token and secret
     auth.set_access_token(access_token, access_token_secret)
     # Creating the API object while passing in auth information
     api = tweepy.API(auth,wait_on_rate_limit = True)
+    with open('test.txt','w') as file:
+        file.write('test')
 
-
+    with open('~/variable.txt','r') as file:
+        curr_time = file.read()
 
     search_term = '(bitcoin OR btc OR #bitcoin) -giveaway -filter:retweets -filter:replies'
-    tweets = tweepy.Cursor(api.search_tweets, q = search_term, lang = 'en',until = '2021-11-30, tweet_mode = 'extended').items(50)
+    tweets = tweepy.Cursor(api.search_tweets, q = search_term, lang = 'en',until = curr_time, tweet_mode = 'extended').items(50)
 
     with open(f"tweets_2021-11-30.csv",'a', encoding='utf-8_sig',newline='') as csvfile: #using utf-8_sig instead of utf-8 for valid encodding of special chars
       csvwriter = csv.writer(csvfile)
@@ -54,16 +58,27 @@ def twitter_data_collection():
 
 
     s3.Bucket('bitcoin-tweets').upload_file(Filename='tweets_2021-11-30.csv', Key='tweets_2021-11-30.csv')
-      return 'Whatever you return gets printed in the logs'
+
+    curr_time = [ int(val) for val in curr_time]
+
+    date = datetime(curr_time)
+    date +=timedelta(days=1)
+
+    s = str(date)[:10]
+
+    with open('~/variable.txt','w') as file:
+        file.write(s)
+
+
+    return 'Whatever you return gets printed in the logs'
 
 
 
-  
  #################################################
-  
+
 WORkFLOW_DAG_ID = 'twitter_data_dag'
 WORKFLOW_START_DATE = datetime.combine(
-   datetime.today() - timedelta(1),
+   datetime.today(),
    datetime.min.time()) # yesterday
 
 WORKFLOW_SCHEDULE_INTERVAL = '30 8 * * *'
@@ -71,16 +86,16 @@ WORKFLOW_SCHEDULE_INTERVAL = '30 8 * * *'
 WORKFLOW_DEFAULT_ARGS = {
  'start_date': WORKFLOW_START_DATE,
  'email_on_failure': True,
- 'email_on_retry':rue,
+ 'email_on_retry':True,
  'retries': 5,
- 'retry_delay': datetime.timedelta(minutes=5)
+ 'retry_delay': timedelta(minutes=5)
 }
 
 dag = DAG(dag_id = WORkFLOW_DAG_ID,
           start_date = WORKFLOW_START_DATE,
           schedule_interval = WORKFLOW_SCHEDULE_INTERVAL,
           default_args = WORKFLOW_DEFAULT_ARGS,
-          pushback = False
+          catchup = False
   )
 
 
@@ -91,3 +106,4 @@ run_this = PythonOperator(
 )
 
 run_this
+              
