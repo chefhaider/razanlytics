@@ -71,3 +71,6 @@ run_this = PythonOperator(
 )
 
 run_this
+
+
+#datetime.strptime('2021-12-02 00:00:00', '%Y-%m-%d %H:%M:%S')
