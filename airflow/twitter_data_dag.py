@@ -7,8 +7,8 @@ import tweepy
 import boto3
 import pandas as pd
 
-AWSAccessKeyId='AKIAWVZUC74SU2HOSPEF'
-AWSSecretKey='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'
+AWSAccessKeyId=''
+AWSSecretKey=''
 
 region='ap-south-1'
 
@@ -27,12 +27,12 @@ def twitter_data_collection():
 
     global s3
 
-    baerer_token = "AAAAAAAAAAAAAAAAAAAAAL9eVAEAAAAAlzrtLYD30GeMrnrPOwseqkG22kw%3DnYVHvJSEJa6evdQyYI3pKj4RHSLTFNpNYErv1wYDaouNnn3xk0"
+    baerer_token = ""
 
-    api_key = "SmcmmHAkjutFFPftMckmPWWuH"
-    api_secret = "i0ciB7f2egCQlPmKn08K7NZMWNAknhuBe74wzPuWcuOCZ13iXc"
-    access_token = "1452266272511647751-KPXZJxXgpBUm4FguKaSvfG2vgr18Za"
-    access_token_secret = "ew7N8JNa16xhwUhHBQmRcGSHB3KNYg783fL2yc1QfJXyc"
+    api_key = ""
+    api_secret = ""
+    access_token = ""
+    access_token_secret = ""
 
     # Creating the authentication object
     auth = tweepy.OAuthHandler(api_key, api_secret)
