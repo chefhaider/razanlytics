@@ -45,12 +45,12 @@ class Tweet(object):
 
 
 forecast_range = st.sidebar.selectbox('Select Range for Forecasting',
-  ['12hrs','32hrs'])
+  ['24hrs','36hrs'])
 
-if forecast_range == '12hrs':
-    filename = 'output12.csv'
+if forecast_range == '24hrs':
+    filename = 'data/output12.csv'
 else:
-    filename = 'output32.csv'
+    filename = 'data/output36.csv'
 
 df_res = pd.read_csv(filename)
 df_res.timestamp = pd.to_datetime(df_res['timestamp'])
@@ -80,8 +80,25 @@ with c[0]:
     st.metric("BTCBUSD", col_price, col_percent)
 
     st.header("Predicted Price")
-    st.metric("BTCBUSD", round(df_res['predicted'].iloc[-1],3),f"{round(float(val),3)}%")
+
 with c[1]:
+    st.markdown("#### Today's Hottest bitcoin-related Tweet")
+    # Read the CSV file into a DataFrame and sort based on 'likes'
+    df = pd.read_csv('data/raw_tweets/'+str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))+'.csv')
+    df_sorted = df.sort_values(by='likes', ascending=False)
+    t = highest_likes_row = df_sorted.iloc[0]
+
+        
+
+with c[2]:
+    st.header("Todays Sentiments")
+    
+    st.write('sentiment score in last 24 hours,')
+    st.write('positive: ',df_sorted['positive_sentiments'].mean())
+    st.write('negative: ',df_sorted['negative_sentiments'].mean())
+
+
+'''with c[1]:
     st.markdown("#### Today's Hottest bitcoin-related Tweet")
     t = Tweet("https://twitter.com/BTC_Archive/status/1533760097524006914").component()    
 
@@ -90,7 +107,7 @@ with c[2]:
     
     st.write('sentiment score in last 24 hours,')
     st.write('positive: ',0.11848)
-    st.write('negative: ',0.05858)
+    st.write('negative: ',0.05858)'''
 
 
 st.sidebar.image(

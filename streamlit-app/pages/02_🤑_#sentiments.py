@@ -45,7 +45,8 @@ c1.plotly_chart(fig,use_container_width = True)
 
 
 
-df = pd.read_csv(f'./sentiments/sent_{str(date).split()[0]}.csv')
+df = pd.read_csv(f'data/sentiments/sent_{str(date).split()[0]}.csv')
+df = df.drop('user_name', axis=1)
 
 df['weighted_comp'] = df.compound*((df.likes -df.likes.mean())/df.likes.std())
 df['timestamp'] = pd.to_datetime(df.timestamp)
