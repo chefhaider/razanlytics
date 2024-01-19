@@ -34,12 +34,6 @@ between public opinion and the actual price fluctuation and then actually foreca
 price fluctuation as these tweets continue to happen.
 
 
-## Scope
-
-This system will assist authorities or employers in accurately predicting the graph of
-bitcoin or its upcoming trend.It will. It will be using technical analysis to predict the trend
-but the trend is also affected by tweets of several organizations or individuals therefore it
-will also consider their impact on the trends and will give the predicted graph accordingly.
 
 ## Objective
 
